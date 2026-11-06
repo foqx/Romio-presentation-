@@ -1,0 +1,728 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>روميو ولغز المفاتيح</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lalezar&family=Tajawal:wght@500;700;800&family=Amiri:wght@700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --blue:#0d3fb0; --blue2:#1d5ad6; --yellow:#ffd21f; --gold:#f2b84b; --gold2:#ffe39a;
+  --wood:#5b3a29; --cream:#fbf3dc; --red:#e53935; --green:#2e9d4f; --ink:#3a2618;
+  --ease:cubic-bezier(.22,1,.36,1); --pop:cubic-bezier(.3,1.5,.5,1);
+  --disp:Lalezar,Tajawal,"Segoe UI",sans-serif; --body:Tajawal,"Segoe UI",Tahoma,sans-serif; --word:Amiri,"Traditional Arabic",serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;overflow:hidden;background:#05112e;font-family:var(--body);color:#fff}
+button{font-family:inherit}
+#stage{position:absolute;left:50%;top:50%;width:1920px;height:1080px;transform-origin:center;overflow:hidden;background:#000;box-shadow:0 30px 80px rgba(0,0,0,.5)}
+.abs{position:absolute}
+img{user-select:none;-webkit-user-drag:none}
+
+/* ---------- slides + transitions ---------- */
+/* clip (not hidden): hidden boxes can still be scrolled by focus, shifting overlays off-centre */
+.slide{position:absolute;inset:0;overflow:hidden;overflow:clip;visibility:hidden;opacity:0}
+.slide.active{visibility:visible;opacity:1;z-index:2;animation:inZoom 1.1s var(--ease) both}
+.slide[data-tr=wipe].active{animation:inWipe 1.3s var(--ease) both}
+.slide[data-tr=push].active{animation:inPush 1.1s var(--ease) both}
+.slide.leaving{visibility:visible;opacity:1;z-index:1;animation:out 1s var(--ease) both}
+@keyframes inZoom{from{opacity:0;transform:scale(1.12);filter:blur(14px)}to{opacity:1;transform:none;filter:none}}
+@keyframes inWipe{from{clip-path:circle(0% at 50% 55%)}to{clip-path:circle(150% at 50% 55%)}}
+@keyframes inPush{from{transform:translateX(-100%)}to{transform:none}}
+@keyframes out{to{opacity:0;transform:scale(.94);filter:blur(6px)}}
+
+/* reveal system */
+.rv{opacity:0}
+.active .rv{animation:rv 1s var(--ease) var(--d,0s) both}
+@keyframes rv{from{opacity:0;transform:translateY(34px);filter:blur(8px)}to{opacity:1;transform:none;filter:none}}
+.active .pop{animation:pop .9s var(--pop) var(--d,0s) both}
+@keyframes pop{from{transform:scale(0) rotate(-12deg);opacity:0}to{transform:none;opacity:1}}
+/* Arabic-safe "ink" reveal: wipes right-to-left so letters stay joined */
+.ink{clip-path:inset(0 0 0 100%)}
+.active .ink{animation:ink 1.4s var(--ease) var(--d,0s) forwards}
+@keyframes ink{to{clip-path:inset(-20% -5% -20% -5%)}}
+.wd{display:inline-block;opacity:0}
+.active .wd{animation:rv .7s var(--ease) both}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes bob{50%{transform:translateY(-14px)}}
+@keyframes kb{from{transform:scale(1.02)}to{transform:scale(1.12) translate(-1.5%,-1%)}}
+.kb{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.active .kb{animation:kb 22s linear both}
+
+/* ---------- 1. cover ---------- */
+#s1{background:radial-gradient(1200px 900px at 65% 35%,var(--blue2),var(--blue) 55%,#082a7c)}
+.rays{position:absolute;left:1290px;top:330px;width:3600px;height:3600px;margin:-1800px;
+  background:repeating-conic-gradient(from 0deg,rgba(255,255,255,.10) 0deg 7deg,transparent 7deg 18deg);animation:spin 90s linear infinite}
+.star{position:absolute;color:var(--yellow);font-size:var(--s,40px);text-shadow:0 0 18px rgba(255,210,31,.8);animation:tw 2.6s ease-in-out var(--d,0s) infinite}
+@keyframes tw{0%,100%{opacity:.25;transform:scale(.7) rotate(0)}50%{opacity:1;transform:scale(1.1) rotate(20deg)}}
+.tv{position:absolute;left:1020px;top:14px;width:560px;opacity:0}
+.active .tv{animation:tvDrop 1.3s var(--pop) .2s both}
+@keyframes tvDrop{from{opacity:0;transform:translateY(-700px) rotate(-14deg)}to{opacity:1;transform:none}}
+.tv .wob{animation:wob 4s ease-in-out 1.6s infinite;transform-origin:50% 100%}
+@keyframes wob{0%,100%{transform:rotate(0)}25%{transform:rotate(-1.4deg)}75%{transform:rotate(1.4deg)}}
+.tv img.body{width:100%;display:block}
+.tv .static{position:absolute;left:19%;top:31%;width:52%;height:47%;border-radius:14%;opacity:0;mix-blend-mode:screen;
+  background:repeating-linear-gradient(0deg,rgba(255,255,255,.35) 0 2px,transparent 2px 5px),radial-gradient(circle,#9cc3ff,#2449a8);}
+.active .tv .static{animation:stat 1.2s steps(6) 1.2s both}
+@keyframes stat{0%{opacity:0}10%,80%{opacity:.9;background-position:0 0}50%{background-position:0 13px}100%{opacity:0}}
+.tv .logo{position:absolute;left:26%;top:44%;width:48%;opacity:0;filter:drop-shadow(0 0 14px rgba(255,255,255,.6))}
+.active .tv .logo{animation:logoIn 1s var(--pop) 2.1s both,glow 3s ease-in-out 3.2s infinite}
+@keyframes logoIn{from{opacity:0;transform:scale(.2) rotate(-25deg)}to{opacity:1;transform:none}}
+@keyframes glow{50%{filter:drop-shadow(0 0 28px rgba(255,230,120,.95))}}
+.story{position:absolute;left:740px;top:600px;width:1100px;padding:26px 44px 20px;border-radius:30px;
+  background:rgba(6,30,100,.55);border:2px solid rgba(255,255,255,.25);backdrop-filter:blur(10px);box-shadow:0 30px 60px rgba(0,0,0,.35);
+  font-size:31px;font-weight:700;line-height:1.65;text-align:center}
+.story mark{background:none;color:var(--yellow)}
+.sign{display:flex;justify-content:center;align-items:center;gap:12px;margin-top:10px;font-family:var(--disp);font-size:40px;font-weight:400;color:var(--yellow)}
+/* landscape phone holding Romeo's video; ⛶ moves the same <video> into a big viewer */
+.phone{position:absolute;left:90px;top:250px;width:620px;height:372px;border-radius:46px;padding:18px 26px;background:#111;
+  box-shadow:0 0 0 6px #2b2b2b,0 40px 80px rgba(0,0,0,.55);transform:rotate(-4deg);opacity:0;cursor:pointer}
+.active .phone{animation:phoneIn 1.2s var(--pop) 1s both}
+@keyframes phoneIn{from{opacity:0;transform:translateX(-600px) rotate(-30deg)}to{opacity:1;transform:rotate(-4deg)}}
+.phone .slot,.bv-frame .slot{width:100%;height:100%;border-radius:26px;overflow:hidden;background:#000}
+.slot video{width:100%;height:100%;object-fit:contain;background:#000;display:block}
+.phone .pbtn{position:absolute;left:50%;top:50%;width:110px;height:110px;margin:-55px;border-radius:50%;display:grid;place-items:center;font-size:48px;color:var(--ink);
+  background:rgba(255,210,31,.92);box-shadow:0 0 0 12px rgba(255,210,31,.3);pointer-events:none;transition:opacity .3s;animation:pulse 1.6s ease-in-out infinite}
+.phone.playing .pbtn{opacity:0}
+.phone-cap{position:absolute;left:90px;top:680px;width:620px;display:flex;justify-content:center;gap:16px}
+.phone-cap .chip{font-size:30px;padding:14px 30px;background:var(--yellow);color:var(--ink);box-shadow:0 8px 0 #c99a00}
+.phone-cap .chip.big{background:#fff}
+.bigview{position:absolute;inset:0;z-index:12;background:rgba(3,10,35,.88);backdrop-filter:blur(10px);display:none}
+.bigview.open{display:block;animation:fadeIn .4s both}
+.bv-frame{position:absolute;left:150px;top:80px;width:1620px;height:920px;padding:20px;border-radius:44px;background:#111;
+  box-shadow:0 0 0 8px #e0aa45,0 50px 100px rgba(0,0,0,.6);animation:cardIn .6s var(--pop) both}
+.bv-x{top:40px;left:40px;width:80px;height:80px;font-size:40px;z-index:13}
+
+/* ---------- video slides ---------- */
+.vslide video.bgv{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;background:#000;cursor:pointer}
+.vig{position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse at center,transparent 55%,rgba(0,0,0,.45))}
+.bigplay{position:absolute;left:50%;top:50%;width:170px;height:170px;margin:-85px;border-radius:50%;border:0;cursor:pointer;
+  background:rgba(255,210,31,.92);color:var(--ink);font-size:70px;box-shadow:0 0 0 14px rgba(255,210,31,.3),0 20px 50px rgba(0,0,0,.4);
+  display:none;place-items:center;animation:pulse 1.6s ease-in-out infinite}
+.paused .bigplay{display:grid}
+@keyframes pulse{50%{box-shadow:0 0 0 30px rgba(255,210,31,.08),0 20px 50px rgba(0,0,0,.4)}}
+.vctl{position:absolute;top:34px;left:40px;display:flex;gap:12px;z-index:3;opacity:.35;transition:opacity .3s}
+.vctl:hover{opacity:1}
+.vctl button,.chip{border:0;cursor:pointer;background:rgba(0,0,0,.55);color:#fff;font-size:26px;font-weight:700;padding:12px 24px;border-radius:999px;backdrop-filter:blur(6px)}
+.nexthint{position:absolute;left:60px;bottom:60px;padding:18px 36px;border-radius:999px;background:var(--yellow);color:var(--ink);font-size:32px;font-weight:800;
+  opacity:0;transform:translateY(20px);transition:.6s var(--ease);pointer-events:none}
+.ended .nexthint{opacity:1;transform:none;animation:nudge 1.2s ease-in-out infinite}
+@keyframes nudge{50%{transform:translateX(-14px)}}
+.ttl{position:absolute;font-family:var(--disp);font-weight:400;color:#fff;
+  text-shadow:0 4px 0 #b9741d,0 0 40px rgba(255,200,90,.85),0 12px 30px rgba(0,0,0,.5)}
+
+/* ---------- 4. Romeo's message (appears after the gate video) ---------- */
+.msg-bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity 1.2s var(--ease);pointer-events:none}
+.msg .msg-bg{opacity:1;animation:kb 22s linear both}
+.msgfx{position:absolute;inset:0;opacity:0;transition:opacity 1s;pointer-events:none}
+.msg .msgfx{opacity:1}
+.msg .bigplay{display:none}
+.scroll{position:absolute;left:70px;top:120px;width:1000px;padding:44px 56px 50px 64px;border-radius:34px;color:var(--ink);
+  background:radial-gradient(circle at 80% 0%,rgba(255,255,255,.7),transparent 50%),linear-gradient(170deg,#fdf5df,#f0dcaa);
+  border:5px solid #e0aa45;outline:3px dashed rgba(138,59,18,.3);outline-offset:-20px;
+  box-shadow:0 0 0 10px rgba(255,227,154,.25),0 40px 80px rgba(0,0,0,.55),0 0 80px rgba(255,190,70,.35);opacity:0;pointer-events:none}
+.msg .scroll,.active .scroll.auto{animation:unroll 1.1s var(--pop) .5s both;pointer-events:auto}
+.obj-card{top:150px;width:1060px}
+@keyframes unroll{from{opacity:0;transform:translateY(-60px) scale(.7) rotate(-3deg)}to{opacity:1;transform:none}}
+.scroll .ribbon{position:absolute;top:-36px;right:70px;padding:6px 44px 14px;background:linear-gradient(180deg,#ff5b4d,#d6332a);color:#fff;
+  font-family:var(--disp);font-size:46px;border-radius:14px;box-shadow:0 8px 0 #9c1f18,0 16px 30px rgba(0,0,0,.35);transform:rotate(-3deg)}
+.from{display:flex;align-items:center;gap:22px;margin:14px 0 22px;padding-bottom:18px;border-bottom:3px dotted rgba(138,59,18,.35)}
+.ava{flex:none;width:130px;height:130px;border-radius:50%;background:#3a6be0 url(assets/romeo.png) no-repeat;background-size:270px auto;background-position:-52px 4px;
+  box-shadow:0 0 0 6px #e0aa45,0 10px 24px rgba(0,0,0,.3)}
+.from b{display:block;font-family:var(--disp);font-weight:400;font-size:60px;color:#8a3b12;line-height:1.1}
+.from small{font-size:28px;font-weight:800;color:#7b6a55}
+.say{display:flex;align-items:center;gap:20px;font-size:37px;white-space:nowrap;font-weight:800;line-height:1.5;margin:14px 0;opacity:0}
+.say i{flex:none;width:68px;height:68px;border-radius:50%;background:var(--wood);display:grid;place-items:center;font-style:normal;font-size:34px;box-shadow:0 6px 14px rgba(0,0,0,.2)}
+.msg .say,.active .auto .say{animation:sayIn .8s var(--pop) both}
+@keyframes sayIn{from{opacity:0;transform:translateX(-60px)}to{opacity:1;transform:none}}
+.say.q{margin-top:22px;padding:14px 22px;border-radius:22px;background:linear-gradient(90deg,#ffd21f,#ffe796);color:#5a2e0c;box-shadow:0 10px 22px rgba(201,154,0,.35)}
+.msg .say.q,.active .auto .say.q{animation:sayIn .8s var(--pop) both,qPulse 2s ease-in-out 5s infinite}
+@keyframes qPulse{50%{box-shadow:0 0 0 10px rgba(255,210,31,.35),0 10px 22px rgba(201,154,0,.35)}}
+.say.q i{background:#8a3b12}
+.seal{position:absolute;left:-30px;bottom:-34px;width:110px;height:110px;border-radius:50%;display:grid;place-items:center;font-size:52px;
+  background:radial-gradient(circle at 35% 30%,#ff6b5e,#b3241c);box-shadow:0 0 0 6px rgba(179,36,28,.35),0 12px 24px rgba(0,0,0,.4);opacity:0}
+.msg .seal,.active .auto .seal{animation:pop .9s var(--pop) 4.6s both}
+.vmsg{display:none}
+.hole{position:absolute;width:150px;height:260px;margin:-130px -75px;border-radius:50%;pointer-events:none;mix-blend-mode:screen;
+  background:radial-gradient(closest-side,rgba(255,190,70,.9),rgba(255,140,30,.35) 60%,transparent);opacity:0}
+.msg .hole{animation:holeGlow 2.2s ease-in-out var(--d) infinite}
+@keyframes holeGlow{0%,100%{opacity:.25;transform:scale(.9)}50%{opacity:1;transform:scale(1.1)}}
+.dust{position:absolute;width:var(--z);height:var(--z);border-radius:50%;background:#ffe7a8;box-shadow:0 0 10px #ffd36b;opacity:0;pointer-events:none;
+  animation:dust var(--t) linear var(--d) infinite}
+@keyframes dust{0%{opacity:0;transform:translate(0,0)}15%{opacity:.9}100%{opacity:0;transform:translate(var(--x),-320px)}}
+
+/* ---------- 6. three keys ---------- */
+#s6 .bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:blur(3px)}
+#s6 .tint{position:absolute;inset:0;background:linear-gradient(180deg,rgba(13,63,176,.82),rgba(10,40,130,.9))}
+.h-title{position:absolute;left:0;right:0;top:46px;text-align:center;font-family:var(--disp);font-size:92px;color:#fff;
+  text-shadow:0 5px 0 #0a2a7a,0 0 40px rgba(255,210,31,.5)}
+.h-sub{position:absolute;left:0;right:0;top:170px;text-align:center;font-size:36px;font-weight:700;color:var(--gold2)}
+.notes{position:absolute;left:170px;top:268px;width:1580px!important;width:1620px;display:flex;justify-content:space-between}
+/* key cards share the look of Romeo's letter */
+.note{position:relative;width:460px;height:540px;cursor:pointer;color:var(--ink);opacity:0;transform-origin:50% 0;font-family:inherit;
+  border-radius:34px;padding:74px 30px 30px;border:5px solid #e0aa45;outline:3px dashed rgba(138,59,18,.3);outline-offset:-20px;
+  background:radial-gradient(circle at 80% 0%,rgba(255,255,255,.7),transparent 50%),linear-gradient(170deg,#fdf5df,#f0dcaa);
+  box-shadow:0 0 0 10px rgba(255,227,154,.25),0 40px 70px rgba(0,0,0,.5),0 0 60px rgba(255,190,70,.25);
+  display:flex;flex-direction:column;align-items:center;transition:transform .4s var(--ease),box-shadow .4s}
+.active .note{animation:noteDrop 1.3s var(--pop) var(--d) both}
+@keyframes noteDrop{0%{opacity:0;transform:translateY(-700px) rotate(-14deg)}60%{opacity:1;transform:translateY(0) rotate(4deg)}80%{transform:rotate(-1.5deg)}100%{opacity:1;transform:none}}
+.note:hover,.note:focus-visible{transform:translateY(-10px) rotate(-1deg);box-shadow:0 0 0 12px rgba(255,210,31,.45),0 50px 80px rgba(0,0,0,.55),0 0 80px rgba(255,190,70,.45)}
+.note .ribbon{position:absolute;top:-34px;left:50%;padding:6px 38px 12px;background:linear-gradient(180deg,#ff5b4d,#d6332a);color:#fff;white-space:nowrap;
+  font-family:var(--disp);font-size:42px;border-radius:14px;box-shadow:0 8px 0 #9c1f18,0 16px 30px rgba(0,0,0,.35);transform:translateX(-50%) rotate(-3deg)}
+.note .look{font-size:24px;font-weight:800;color:#7b6a55}
+.note .w{font-family:var(--word);font-size:104px;line-height:1.35;color:var(--ink);text-shadow:0 6px 0 rgba(242,184,75,.35)}
+.note .med{position:relative;width:170px;height:170px;border-radius:50%;margin:4px 0 16px;overflow:visible;
+  background:radial-gradient(circle at 50% 40%,#3a6be0,#0d3fb0 75%);box-shadow:0 0 0 6px #e0aa45,0 12px 24px rgba(0,0,0,.3)}
+.note .med::before{content:"";position:absolute;inset:6px;border-radius:50%;background:repeating-conic-gradient(rgba(255,255,255,.14) 0 8deg,transparent 8deg 20deg);animation:spin 30s linear infinite}
+.note .k{position:absolute;left:50%;top:50%;height:210px;transform:translate(-50%,-50%) rotate(35deg);animation:keyBob 3s ease-in-out infinite;transition:filter .5s}
+@keyframes keyBob{50%{transform:translate(-50%,-58%) rotate(28deg)}}
+.note.done .k{filter:drop-shadow(0 0 16px #ffd36b) drop-shadow(0 0 30px #ffb300)}
+.note .tap{padding:10px 30px;border-radius:999px;background:linear-gradient(90deg,#ffd21f,#ffe796);color:#5a2e0c;font-size:28px;font-weight:800;
+  box-shadow:0 8px 18px rgba(201,154,0,.35);animation:qPulse 2s ease-in-out 3s infinite}
+.note.done .tap{background:linear-gradient(90deg,#2e9d4f,#5cc97a);color:#fff;animation:none}
+.note .stamp{position:absolute;top:-26px;left:-26px;width:84px;height:84px;border-radius:50%;display:grid;place-items:center;color:#fff;font-size:46px;
+  background:radial-gradient(circle at 35% 30%,#5cc97a,#1f7a3a);box-shadow:0 0 0 6px rgba(46,157,79,.3),0 10px 20px rgba(0,0,0,.3);
+  transform:rotate(-16deg) scale(0);opacity:0;transition:.6s var(--pop)}
+.note.done .stamp{transform:rotate(-12deg);opacity:1}
+.tray{position:absolute;left:50%;bottom:44px;transform:translateX(-50%);display:flex;align-items:center;gap:26px;padding:16px 40px;border-radius:999px;
+  background:rgba(0,0,0,.35);border:2px solid rgba(255,255,255,.2)}
+.tray .slot{width:70px;height:110px;display:grid;place-items:center;position:relative}
+.tray .slot img{height:130px;opacity:.35;transition:.6s}
+.tray .slot.on img{opacity:1;filter:drop-shadow(0 0 16px #ffc24a)}
+.tray b{font-family:var(--disp);font-weight:400;font-size:44px;color:var(--yellow)}
+.win{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%) scale(0);padding:40px 80px;border-radius:40px;background:var(--yellow);color:var(--ink);
+  text-align:center;font-family:var(--disp);font-size:74px;box-shadow:0 0 0 16px rgba(255,210,31,.3),0 40px 80px rgba(0,0,0,.5);z-index:5;transition:.8s var(--pop);pointer-events:none}
+.win small{display:block;font-family:var(--body);font-size:34px;font-weight:800}
+.win.show{transform:translate(-50%,-50%) scale(1)}
+.reset{position:absolute;top:40px;left:40px;opacity:.4}
+.reset:hover{opacity:1}
+
+/* puzzle modal */
+.puz{position:absolute;inset:0;z-index:10;background:rgba(5,15,50,.7);backdrop-filter:blur(8px);display:none}
+.puz.open{display:block;animation:fadeIn .4s both}
+@keyframes fadeIn{from{opacity:0}}
+.card{position:absolute;left:170px;top:70px;width:1580px;height:920px;border-radius:44px;
+  background:linear-gradient(160deg,#fff9e6,#f6e6bd);color:var(--ink);box-shadow:0 0 0 10px rgba(242,184,75,.55),0 50px 100px rgba(0,0,0,.6);
+  display:grid;grid-template-columns:1fr 430px;grid-template-rows:100%;overflow:hidden;animation:cardIn .7s var(--pop) both}
+@keyframes cardIn{from{transform:scale(.6) rotate(-4deg);opacity:0}}
+.card .main{padding:40px 70px 24px 30px;overflow:hidden}
+.card .kicker{display:inline-block;padding:6px 26px 10px;border-radius:999px;background:var(--wood);color:var(--gold2);font-family:var(--disp);font-size:34px}
+.card h3{font-family:var(--disp);font-weight:400;font-size:70px;color:#8a3b12;margin:6px 0 0}
+.card .look{font-size:32px;font-weight:800;color:#7b6a55;margin-top:4px}
+.card .big{font-family:var(--word);font-size:120px;line-height:1.3;text-align:center;color:var(--ink);margin:-6px 0 6px;
+  text-shadow:0 6px 0 rgba(242,184,75,.35)}
+.big span{transition:color .6s,text-shadow .6s}
+.big .hz.lit{color:var(--red);text-shadow:0 0 30px rgba(229,57,53,.45)}
+.big .pv.lit{color:#1e5bd6;text-shadow:0 0 30px rgba(30,91,214,.4)}
+.qs{list-style:none;display:flex;flex-direction:column;gap:14px}
+.qs li{border-radius:24px;background:rgba(255,255,255,.75);border:3px solid rgba(91,58,41,.15);padding:12px 22px;cursor:pointer;transition:.4s var(--ease)}
+.qs li:hover{border-color:var(--gold)}
+.qs .qq{display:flex;align-items:center;gap:18px;font-size:38px;font-weight:800}
+.qs .n{flex:none;width:58px;height:58px;border-radius:50%;background:var(--wood);color:var(--gold2);display:grid;place-items:center;font-family:var(--disp);font-size:36px}
+.qs .ans{max-height:0;overflow:hidden;font-size:34px;font-weight:800;color:var(--green);transition:max-height .7s var(--ease),margin .7s var(--ease);padding-right:76px}
+.qs li.open{border-color:var(--green);background:#fff;box-shadow:0 14px 30px rgba(46,157,79,.18)}
+.qs li.open .n{background:var(--green);color:#fff}
+.qs li.open .ans{max-height:130px;margin-top:8px}
+.qs .ans span{display:inline-block;animation:ansIn .7s var(--pop) both}
+@keyframes ansIn{from{opacity:0;transform:translateX(40px) scale(.9)}}
+.card .foot{margin-top:18px;font-size:30px;font-weight:800;color:#8a3b12}
+.side{position:relative;background:radial-gradient(circle at 50% 30%,#3a6be0,#0d3fb0 70%);overflow:hidden}
+.side .rays2{position:absolute;left:50%;top:190px;width:1400px;height:1400px;margin:-700px;opacity:.5;
+  background:repeating-conic-gradient(rgba(255,255,255,.12) 0 8deg,transparent 8deg 20deg);animation:spin 40s linear infinite}
+.side .hole2{position:absolute;left:50%;top:70px;height:230px;transform:translateX(-50%);filter:drop-shadow(0 0 10px #ffb300);transition:filter .6s}
+.side.unlocked .hole2{filter:drop-shadow(0 0 30px #fff3c4) drop-shadow(0 0 60px #ffb300) brightness(1.6)}
+.side .key2{position:absolute;left:50%;top:470px;height:330px;margin-left:-110px;width:220px;object-fit:contain;transition:transform .8s var(--pop);filter:drop-shadow(0 12px 18px rgba(0,0,0,.4))}
+.side .romeo-mini{position:absolute;left:-30px;bottom:-30px;height:300px;transform:scaleX(-1);opacity:.95}
+.side .cap{position:absolute;right:24px;bottom:40px;width:220px;padding:14px 18px;border-radius:22px 22px 4px 22px;background:#fff;color:var(--ink);font-size:26px;font-weight:800;line-height:1.45;box-shadow:0 10px 24px rgba(0,0,0,.3)}
+.side .got{position:absolute;left:20px;right:20px;top:330px;text-align:center;font-family:var(--disp);font-size:52px;color:var(--yellow);
+  text-shadow:0 4px 0 #6b4a00;opacity:0;transform:scale(.4);transition:.7s var(--pop)}
+.side.unlocked .got{opacity:1;transform:none}
+.x{position:absolute;top:22px;left:22px;width:64px;height:64px;border-radius:50%;border:0;cursor:pointer;background:var(--wood);color:#fff;font-size:34px;z-index:3}
+.nextq{position:absolute;top:40px;left:470px;padding:14px 34px;border-radius:999px;border:0;cursor:pointer;background:var(--wood);color:var(--gold2);font-size:30px;font-weight:800}
+
+/* ---------- 8. objectives ---------- */
+.note-big{position:absolute;left:370px;top:30px;width:830px;filter:drop-shadow(0 30px 40px rgba(0,0,0,.45));opacity:0}
+.active .note-big{animation:noteDrop 1.3s var(--pop) .2s both}
+.obj{position:absolute;left:450px;top:240px;width:680px;color:var(--ink)}
+.obj h2{font-family:var(--disp);font-weight:400;font-size:96px;color:var(--red);text-align:center;line-height:1.1;margin-bottom:22px}
+.obj ul{list-style:none;display:flex;flex-direction:column;gap:20px}
+.obj li{display:flex;gap:18px;align-items:flex-start;font-size:35px;font-weight:800;line-height:1.45}
+.obj li i{flex:none;width:54px;height:54px;border-radius:50%;background:var(--green);color:#fff;display:grid;place-items:center;font-style:normal;font-size:30px;margin-top:2px}
+.romeo{position:absolute;left:1190px;top:150px;height:930px;opacity:0}
+.active .romeo{animation:romeoIn 1.2s var(--ease) .4s both,sway 5s ease-in-out 1.8s infinite}
+@keyframes romeoIn{from{opacity:0;transform:translateX(500px)}to{opacity:1;transform:none}}
+.romeo{transform-origin:50% 100%}
+@keyframes sway{0%,100%{opacity:1;transform:none}50%{opacity:1;transform:rotate(1.2deg)}}
+
+/* ---------- 9. finale ---------- */
+.fin-title{position:absolute;left:60px;top:30px;width:960px;text-align:center;font-family:var(--disp);font-size:128px;color:var(--yellow);
+  text-shadow:0 7px 0 #a8620b,0 0 50px rgba(255,200,80,.8),0 20px 40px rgba(0,0,0,.4);opacity:0;transform:scale(.3)}
+.fin-title.show{animation:pop 1s var(--pop) both}
+.fin-sub{position:absolute;left:60px;top:205px;width:960px;text-align:center;font-size:40px;font-weight:800;opacity:0;text-shadow:0 3px 12px rgba(0,0,0,.6)}
+.fin-sub.show{animation:rv 1s var(--ease) .3s both}
+.chest{position:absolute;left:1050px;top:610px;width:440px;height:420px;opacity:0;cursor:pointer}
+.chest.in{opacity:1;animation:chestDrop 1s cubic-bezier(.5,0,.75,0) both}
+@keyframes chestDrop{from{transform:translateY(-900px)}to{transform:none}}
+.chest.land{animation:land .5s var(--pop) both}
+@keyframes land{0%{transform:scale(1.15,.82)}100%{transform:none}}
+.chest.shake{animation:shake 1.9s linear both}
+@keyframes shake{
+  0%,100%{transform:none}
+  5%{transform:rotate(-2deg)}10%{transform:rotate(2deg)}15%{transform:rotate(-2deg)}20%{transform:rotate(1deg)}25%{transform:none}
+  40%{transform:translateX(-6px) rotate(-3deg)}45%{transform:translateX(6px) rotate(3deg)}50%{transform:translateX(-8px) rotate(-4deg)}55%{transform:translateX(8px) rotate(4deg)}
+  62%{transform:translate(-10px,-6px) rotate(-5deg)}67%{transform:translate(10px,-10px) rotate(5deg)}72%{transform:translate(-12px,-4px) rotate(-6deg)}
+  77%{transform:translate(12px,-12px) rotate(6deg)}82%{transform:translate(-12px,-6px) rotate(-6deg)}87%{transform:translate(12px,-14px) rotate(7deg)}92%{transform:translate(-8px,-4px) rotate(-4deg)}}
+.c-rays{position:absolute;left:220px;top:150px;width:1500px;height:1500px;margin:-750px;border-radius:50%;opacity:0;pointer-events:none;
+  background:repeating-conic-gradient(rgba(255,236,170,.55) 0 5deg,transparent 5deg 15deg);
+  -webkit-mask:radial-gradient(closest-side,#000 10%,transparent);mask:radial-gradient(closest-side,#000 10%,transparent);transition:opacity 1s, transform 1s}
+.chest.open .c-rays{opacity:1;animation:spin 25s linear infinite}
+.c-glow{position:absolute;left:30px;top:120px;width:380px;height:120px;border-radius:50%;background:radial-gradient(closest-side,#fff,#ffe08a 40%,rgba(255,170,30,.0));opacity:0;transition:opacity .4s;filter:blur(4px)}
+.chest.shake .c-glow{animation:seep 1.9s ease-in both}
+@keyframes seep{0%{opacity:0}100%{opacity:.8}}
+.chest.open .c-glow{opacity:1}
+.c-body{position:absolute;left:0;bottom:0;width:440px;height:250px;border-radius:12px 12px 26px 26px;
+  background:linear-gradient(180deg,rgba(0,0,0,0) 30%,rgba(0,0,0,.45)),repeating-linear-gradient(90deg,#9a5d2e 0 64px,#6e3d1c 64px 68px);
+  border:9px solid #e0aa45;box-shadow:inset 0 0 0 4px #8a6220,inset 0 -20px 40px rgba(0,0,0,.35),0 30px 40px rgba(0,0,0,.55)}
+.c-body::before,.c-body::after,.c-lid::before,.c-lid::after{content:"";position:absolute;top:0;bottom:0;width:38px;
+  background:linear-gradient(90deg,#b07a1e,#ffd77a 45%,#c48a24);box-shadow:0 0 0 3px #7a5212}
+.c-body::before,.c-lid::before{left:58px}.c-body::after,.c-lid::after{right:58px}
+.c-lock{position:absolute;left:50%;top:-14px;width:90px;height:110px;margin-left:-45px;border-radius:16px 16px 40px 40px;z-index:2;
+  background:linear-gradient(160deg,#ffe596,#d6992b 60%,#a8701a);box-shadow:0 0 0 4px #7a5212,0 8px 16px rgba(0,0,0,.4)}
+.c-lock::after{content:"";position:absolute;left:50%;top:30px;width:22px;height:22px;margin-left:-11px;border-radius:50%;background:#3a2210;
+  box-shadow:0 18px 0 -4px #3a2210,0 26px 0 -6px #3a2210}
+.c-lid{position:absolute;left:-8px;bottom:236px;width:456px;height:160px;border-radius:220px 220px 10px 10px/140px 140px 10px 10px;transform-origin:8% 100%;
+  background:linear-gradient(180deg,rgba(255,255,255,.12),rgba(0,0,0,.25)),repeating-linear-gradient(90deg,#9a5d2e 0 64px,#6e3d1c 64px 68px);
+  border:9px solid #e0aa45;box-shadow:inset 0 0 0 4px #8a6220;overflow:hidden;transition:transform .7s var(--pop)}
+.chest.shake .c-lid{animation:lidRattle .25s linear 5 .9s}
+@keyframes lidRattle{50%{transform:translateY(-12px) rotate(-2deg)}}
+.chest.open .c-lid{transform:translate(-40px,-70px) rotate(-32deg)}
+.puff{position:absolute;width:120px;height:120px;border-radius:50%;background:rgba(230,210,180,.75);filter:blur(10px);pointer-events:none}
+.fkey{position:absolute;width:190px;height:285px;object-fit:contain;opacity:0;filter:drop-shadow(0 0 18px #ffcf5a) drop-shadow(0 10px 14px rgba(0,0,0,.5))}
+.kcard{position:absolute;width:290px;padding:16px 14px 18px;border-radius:28px;text-align:center;background:rgba(255,249,230,.93);color:var(--ink);
+  box-shadow:0 20px 40px rgba(0,0,0,.4),0 0 0 5px rgba(242,184,75,.7);opacity:0;transform:translateY(30px)}
+.kcard.show{animation:rv .8s var(--ease) both}
+.kcard .w{font-family:var(--word);font-size:76px;line-height:1.3}
+.kcard .r{font-size:27px;font-weight:800;color:#8a3b12}
+.secret{position:absolute;left:80px;top:860px;width:940px;padding:22px 34px;border-radius:30px;background:rgba(91,58,41,.92);border:3px solid rgba(255,227,154,.6);
+  box-shadow:0 20px 40px rgba(0,0,0,.4);font-size:32px;font-weight:800;line-height:1.6;opacity:0}
+.secret.show{animation:rv 1s var(--ease) both}
+.secret b{color:var(--yellow)}
+.ladder{display:flex;gap:10px;align-items:center;justify-content:center;margin-top:6px;font-size:28px}
+.ladder span{padding:2px 16px;border-radius:999px;background:rgba(255,255,255,.14)}
+.ladder span.hi{background:var(--yellow);color:var(--ink)}
+.replay{position:absolute;right:40px;top:36px;z-index:4}
+canvas#fx{position:absolute;inset:0;pointer-events:none;z-index:6}
+.spark{position:absolute;pointer-events:none;color:#fff3c4;font-size:var(--s);text-shadow:0 0 12px #ffcf5a;z-index:7}
+
+/* ---------- chrome ---------- */
+#nav{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);display:flex;gap:6px;align-items:center;background:rgba(10,30,90,.85);color:#fff;
+  border-radius:999px;padding:6px 12px;font-size:15px;white-space:nowrap;transition:opacity .5s;z-index:20;backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.15)}
+#nav button{all:unset;cursor:pointer;padding:7px 13px;border-radius:999px;font-weight:700}
+#nav button:hover,#nav button:focus-visible{background:rgba(255,255,255,.18)}
+#cnt,#kc{direction:ltr;unicode-bidi:isolate}
+#cnt{font-variant-numeric:tabular-nums;padding:0 6px;opacity:.85}
+#prog{position:fixed;top:0;right:0;height:5px;background:linear-gradient(270deg,var(--yellow),var(--gold));transition:width .6s var(--ease);z-index:20}
+body.idle #nav{opacity:0}
+body.idle{cursor:none}
+#laser{position:fixed;width:20px;height:20px;border-radius:50%;background:#ff3b3b;box-shadow:0 0 18px 6px rgba(255,40,40,.6);pointer-events:none;transform:translate(-50%,-50%);display:none;z-index:50}
+body.laser #laser{display:block}
+body.laser{cursor:none}
+.overlay{position:fixed;inset:0;background:rgba(5,15,50,.8);backdrop-filter:blur(6px);display:none;z-index:40;place-items:center}
+.overlay.open{display:grid}
+#overview{overflow:auto;place-items:start center;padding:40px}
+#ovGrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:22px;width:min(1400px,100%)}
+#ovGrid button{all:unset;cursor:pointer;background:#123b9c center/cover;border-radius:14px;overflow:hidden;aspect-ratio:16/9;position:relative;outline:4px solid transparent}
+#ovGrid button.cur{outline-color:var(--yellow)}
+#ovGrid button div{position:absolute;inset:0;padding:14px;font:800 22px var(--body);color:#fff;display:flex;align-items:flex-end;background:linear-gradient(transparent 40%,rgba(0,0,0,.8))}
+#help .box{background:#fff;color:var(--ink);border-radius:24px;padding:30px 40px;font-size:20px;line-height:2.1}
+kbd{background:#eef2fb;border-radius:6px;padding:2px 9px;font-family:inherit;border:1px solid #ccd}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.001s!important;animation-delay:0s!important;transition-duration:.001s!important}}
+</style>
+</head>
+<body>
+<div id="prog"></div>
+<div id="stage" role="region" aria-roledescription="presentation">
+
+  <!-- 1. COVER -->
+  <section class="slide" id="s1" data-title="أطفال المستقبل" data-thumb="assets/stoon.png">
+    <div class="rays"></div>
+    <span class="star" style="left:110px;top:70px;--s:54px">✦</span>
+    <span class="star" style="left:690px;top:110px;--s:34px;--d:.8s">✦</span>
+    <span class="star" style="left:1760px;top:120px;--s:46px;--d:1.4s">✦</span>
+    <span class="star" style="left:1700px;top:520px;--s:30px;--d:.4s">✦</span>
+    <span class="star" style="left:640px;top:520px;--s:40px;--d:2s">✦</span>
+    <div class="tv"><div class="wob">
+      <img class="body" src="assets/tv.png" alt="تلفاز قديم">
+      <div class="static"></div>
+      <img class="logo" src="assets/stoon.png" alt="شعار">
+    </div></div>
+    <div class="phone" title="اضغط للتشغيل"><div class="slot"><video src="assets/romeo-reel.mp4#t=0.5" playsinline preload="metadata"></video></div><span class="pbtn">▶</span></div>
+    <div class="phone-cap rv" style="--d:1.8s"><button class="chip" id="reelPlay">▶ شاهدوا الفيديو</button><button class="chip big" id="reelBig">⛶ تكبير الفيديو</button></div>
+    <div class="bigview" id="bigview"><div class="bv-frame"><div class="slot"></div></div><button class="x bv-x" aria-label="إغلاق">✕</button></div>
+    <div class="story">
+      <p class="rv" style="--d:2.6s">كانت سبيستون تُخاطبنا يومًا بوصفنا <mark>أطفال المستقبل</mark>، وكنا ننتظر شاراتها ونعيش مغامراتها بشغف.</p>
+      <p class="rv" style="--d:3.2s">واليوم، أصبح أطفال الأمس <mark>معلّمي اليوم</mark>. نعود إلى تلك الذكريات، لا لنسترجعها فقط، بل لنصنع منها رحلة تعليمية جديدة نحكيها لطلابنا؛ رحلة تجمع بين <mark>متعة الطفولة، وروح المغامرة، وفرحة التعلّم.</mark></p>    </div>
+  </section>
+
+  <!-- 2. VIDEO: friends -->
+  <section class="slide vslide" id="s2" data-title="عهد الأصدقاء" data-tr="wipe" data-thumb="assets/friends.jpg">
+    <video class="bgv" data-end="10.7" src="assets/friends.mp4" poster="assets/friends.jpg" playsinline preload="auto"></video>
+    <div class="vig"></div>
+    <h1 class="ttl ink" style="left:190px;top:200px;font-size:140px;--d:.9s">عهد الأصدقاء</h1>
+    <button class="bigplay" aria-label="تشغيل">▶</button>
+    <div class="vctl"><button class="vre">⟲ إعادة</button></div>
+  </section>
+
+  <!-- 3. VIDEO: Romeo -->
+  <section class="slide vslide" id="s3" data-title="روميو" data-thumb="assets/romeo1.jpg">
+    <video class="bgv" data-end="9.95" src="assets/romeo1.mp4" poster="assets/romeo1.jpg" playsinline preload="auto"></video>
+    <div class="vig"></div>
+    <button class="bigplay" aria-label="تشغيل">▶</button>
+    <div class="vctl"><button class="vre">⟲ إعادة</button></div>
+  </section>
+
+  <!-- 4. VIDEO: the locked gate, then Romeo's message appears over it -->
+  <section class="slide vslide" id="s4" data-title="رسالة روميو" data-tr="push" data-thumb="assets/door-keyholes.jpg">
+    <video class="bgv" data-end="11.1" src="assets/romeo2.mp4" poster="assets/romeo2.jpg" playsinline preload="auto"></video>
+    <img class="msg-bg" src="assets/door-keyholes.jpg" alt="">
+    <div class="msgfx">
+      <div class="hole" style="left:1078px;top:560px;--d:0s"></div>
+      <div class="hole" style="left:1184px;top:560px;--d:.5s"></div>
+      <div class="hole" style="left:1330px;top:560px;--d:1s"></div>
+      <div class="dustbox"></div>
+    </div>
+    <div class="vig"></div>
+    <div class="scroll">
+      <div class="ribbon">تعلّم قبلي</div>
+      <div class="from"><div class="ava"></div><div><b>رسالة من روميو</b><small>إلى فريق الأبطال ✨</small></div></div>
+      <p class="say" data-d="1.4"><i>🔒</i><span>يا أصدقاء، توقّفت بوابة المعرفة عن العمل.</span></p>
+      <p class="say" data-d="2.5"><i>🤝</i><span>ولن تُفتح إلا إذا أثبتم أنكم فريق متعاون.</span></p>
+      <p class="say q" data-d="3.6"><i>🗝️</i><span>هل تساعدونني في العثور على مفاتيح العهد؟</span></p>
+      <div class="seal">🗝</div>
+    </div>
+    <button class="bigplay" aria-label="تشغيل">▶</button>
+    <div class="vctl"><button class="vre">⟲ إعادة</button><button class="vmsg">✉️ الرسالة</button></div>
+  </section>
+
+  <!-- 6. Three keys puzzle -->
+  <section class="slide" id="s6" data-title="لغز المفاتيح" data-tr="wipe" data-thumb="assets/door-closed.png">
+    <img class="bg" src="assets/door-closed.png" alt="">
+    <div class="tint"></div>
+    <div class="h-title rv" style="--d:.5s">🗝️ لغز المفاتيح الثلاثة</div>
+    <div class="h-sub rv" style="--d:.8s">اضغطوا على كل ورقة، وأجيبوا عن الأسئلة ليحصل روميو على المفتاح!</div>
+    <div class="notes" id="notes"></div>
+    <div class="tray rv" style="--d:2s" id="tray"></div>
+    <button class="chip reset" id="resetKeys">⟲ إعادة اللغز</button>
+    <div class="win" id="win">🎉 أحسنتم! جمعتم المفاتيح الثلاثة<small>هيا نفتح بوابة المعرفة مع روميو ←</small></div>
+    <div class="puz" id="puz"></div>
+  </section>
+
+  <!-- 9. Finale: the chest -->
+  <section class="slide" id="s9" data-title="اكتملت المهمة" data-tr="wipe" data-thumb="assets/final.png">
+    <img class="kb" src="assets/final.png" alt="">
+    <div class="dustbox"></div>
+    <div class="fin-title" id="finTitle">اكتملت المهمة!</div>
+    <div class="fin-sub" id="finSub">شكرًا يا أصدقاء… فُتحت بوابة المعرفة بفضل تعاونكم</div>
+    <div class="chest" id="chest" title="اضغط لإعادة المشهد">
+      <div class="c-rays"></div>
+      <div class="c-glow"></div>
+      <div class="c-body"><div class="c-lock"></div></div>
+      <div class="c-lid"></div>
+    </div>
+    <div id="fkeys"></div>
+    <div class="secret" id="secret">
+      <b>🔑 السر:</b> تُكتب الهمزة المتوسطة على <b>الألف</b> عندما تكون <b>الفتحة</b> أقوى حركتَي الهمزة وما قبلها.
+      <div class="ladder"><span>الكسرة</span>‹<span>الضمة</span>‹<span class="hi">الفتحة</span>‹<span>السكون</span><small style="opacity:.75;margin-right:8px">(من الأقوى إلى الأضعف)</small></div>
+    </div>
+    <button class="chip replay" id="replay">⟲ أعيدوا المشهد</button>
+    <canvas id="fx" width="1920" height="1080"></canvas>
+  </section>
+
+  <!-- 7. VIDEO: the gate opens -->
+  <section class="slide vslide" id="s7" data-title="البوابة تُفتح" data-tr="wipe" data-thumb="assets/door-open.jpg">
+    <video class="bgv" src="assets/door-open.mp4" poster="assets/door-open.jpg" playsinline preload="auto"></video>
+    <div class="vig"></div>
+    <button class="bigplay" aria-label="تشغيل">▶</button>
+    <div class="vctl"><button class="vre">⟲ إعادة</button></div>
+  </section>
+
+  <!-- 8. Objectives (same letter design as Romeo's message) -->
+  <section class="slide" id="s8" data-title="أهداف الدرس" data-thumb="assets/door-open-bg.png">
+    <img class="kb" src="assets/door-open-bg.png" alt="">
+    <div class="dustbox"></div>
+    <div class="vig"></div>
+    <div class="scroll auto obj-card">
+      <div class="ribbon">أهداف الدرس 🎯</div>
+      <div class="from"><div class="ava"></div><div><b>ماذا سنتعلّم اليوم؟</b><small>مع روميو في رحلة المفاتيح ✨</small></div></div>
+      <p class="say" data-d="1.3"><i>🔍</i><span>أن يتعرّف الهمزة المتوسطة على الألف.</span></p>
+      <p class="say" data-d="2"><i>🎯</i><span>أن يحدّد حركة الهمزة وحركة ما قبلها.</span></p>
+      <p class="say" data-d="2.7"><i>💡</i><span>أن يعلّل كتابة الهمزة على الألف.</span></p>
+      <p class="say q" data-d="3.4"><i>✍️</i><span>أن يكتب كلمات بها همزة على الألف كتابة صحيحة.</span></p>
+      <div class="seal">🗝</div>
+    </div>
+    <img class="romeo" src="assets/romeo.png" alt="روميو">
+  </section>
+</div>
+
+<nav id="nav" aria-label="التحكم بالشرائح">
+  <button id="bPrev" aria-label="السابق">→ السابق</button>
+  <span id="cnt">01 / 09</span>
+  <button id="bNext" aria-label="التالي">التالي ←</button>
+  <button id="bOv" title="كل الشرائح (O)">▦</button>
+  <button id="bFull" title="ملء الشاشة (F)">⛶</button>
+  <button id="bSnd" title="الصوت (M)">🔊</button>
+  <button id="bHelp" title="الاختصارات (?)">?</button>
+</nav>
+<div id="laser"></div>
+<div class="overlay" id="overview"><div id="ovGrid"></div></div>
+<div class="overlay" id="help"><div class="box">
+  <kbd>→</kbd> <kbd>Space</kbd> <kbd>PageDown</kbd> التالي · <kbd>←</kbd> <kbd>PageUp</kbd> السابق<br>
+  <kbd>F</kbd> ملء الشاشة · <kbd>O</kbd> كل الشرائح · <kbd>M</kbd> كتم الصوت · <kbd>L</kbd> مؤشر الليزر<br>
+  في شريحة المفاتيح: <kbd>1</kbd> <kbd>2</kbd> <kbd>3</kbd> لفتح اللغز · <kbd>Space</kbd> لكشف الإجابة التالية · <kbd>Esc</kbd> للإغلاق
+</div></div>
+<div class="sr" aria-live="polite" id="live"></div>
+
+<script>
+(()=>{
+const $=(s,r=document)=>r.querySelector(s),$$=(s,r=document)=>[...r.querySelectorAll(s)];
+const stage=$('#stage'),slides=$$('.slide');
+const DECK=window.DECK={hooks:{},scale:1};
+const RM=matchMedia('(prefers-reduced-motion:reduce)').matches;
+let cur=-1;
+const wait=ms=>new Promise(r=>setTimeout(r,ms));
+
+/* ---------- sound (synthesised, no files) ---------- */
+let AC=null,muted=false;
+const ac=()=>{if(!AC){try{AC=new (window.AudioContext||window.webkitAudioContext)()}catch(e){}}AC&&AC.state==='suspended'&&AC.resume();return AC};
+function tone(f,t=0,d=.25,type='sine',v=.18,f2){const a=ac();if(!a||muted)return;const o=a.createOscillator(),g=a.createGain(),s=a.currentTime+t;
+  o.type=type;o.frequency.setValueAtTime(f,s);f2&&o.frequency.exponentialRampToValueAtTime(f2,s+d);
+  g.gain.setValueAtTime(0,s);g.gain.linearRampToValueAtTime(v,s+.015);g.gain.exponentialRampToValueAtTime(.001,s+d);o.connect(g).connect(a.destination);o.start(s);o.stop(s+d+.05)}
+function noise(t=0,d=.3,v=.15,f=1200,f2){const a=ac();if(!a||muted)return;const n=a.sampleRate*d,b=a.createBuffer(1,n,a.sampleRate),c=b.getChannelData(0);
+  for(let i=0;i<n;i++)c[i]=(Math.random()*2-1)*(1-i/n);const s=a.createBufferSource(),fl=a.createBiquadFilter(),g=a.createGain(),st=a.currentTime+t;
+  s.buffer=b;fl.type='bandpass';fl.frequency.setValueAtTime(f,st);f2&&fl.frequency.exponentialRampToValueAtTime(f2,st+d);g.gain.value=v;s.connect(fl).connect(g).connect(a.destination);s.start(st)}
+const SFX={
+  pop:()=>tone(520,0,.14,'sine',.16,260),
+  chime:()=>[784,988,1175,1568].forEach((f,i)=>tone(f,i*.07,.5,'triangle',.11)),
+  whoosh:()=>noise(0,.5,.22,300,3000),
+  thud:()=>{tone(120,0,.35,'sine',.35,50);noise(0,.25,.25,400)},
+  rattle:()=>{for(let i=0;i<16;i++)noise(i*.11,.06,.05+i*.012,900+i*40)},
+  unlock:()=>{noise(0,.06,.3,2500);tone(1400,.05,.08,'square',.06);[659,880,1319].forEach((f,i)=>tone(f,.18+i*.09,.6,'triangle',.12))},
+  fanfare:()=>{[523,659,784,1047].forEach((f,i)=>tone(f,i*.13,.35,'triangle',.14));[523,659,784,1047].forEach(f=>tone(f,.6,1.4,'triangle',.08))}
+};
+$('#bSnd').onclick=()=>{muted=!muted;$('#bSnd').textContent=muted?'🔇':'🔊'};
+
+/* ---------- stage fit ---------- */
+function fit(){const s=Math.min(innerWidth/1920,innerHeight/1080);DECK.scale=s;stage.style.transform=`translate(-50%,-50%) scale(${s})`}
+addEventListener('resize',fit);fit();
+
+/* split Romeo's lines into words (keeps Arabic letters joined) */
+$$('.say').forEach(p=>p.style.animationDelay=p.dataset.d+'s'+(p.classList.contains('q')?',5s':''));
+/* floating golden dust */
+$$('.dustbox').forEach(b=>{for(let i=0;i<26;i++){const d=document.createElement('i');d.className='dust';
+  d.style.cssText=`left:${Math.random()*1920}px;top:${500+Math.random()*580}px;--z:${3+Math.random()*6}px;--t:${6+Math.random()*7}s;--d:${-Math.random()*10}s;--x:${(Math.random()-.5)*200}px`;b.appendChild(d)}});
+
+/* sparkle burst at stage coords */
+function burst(x,y,n=18,parent=stage,spread=260){if(RM)return;for(let i=0;i<n;i++){const s=document.createElement('span');s.className='spark';s.textContent=Math.random()<.5?'✦':'✧';
+  s.style.cssText=`left:${x}px;top:${y}px;--s:${18+Math.random()*30}px`;parent.appendChild(s);const a=Math.random()*Math.PI*2,r=spread*(.4+Math.random()*.6);
+  s.animate([{transform:'translate(-50%,-50%) scale(.2)',opacity:1},{transform:`translate(calc(-50% + ${Math.cos(a)*r}px),calc(-50% + ${Math.sin(a)*r}px)) scale(1) rotate(180deg)`,opacity:0}],
+    {duration:900+Math.random()*700,easing:'cubic-bezier(.22,1,.36,1)'}).onfinish=()=>s.remove()}}
+
+/* ---------- navigation ---------- */
+function go(n){n=Math.max(0,Math.min(slides.length-1,n));if(n===cur)return;
+  const a=slides[cur],b=slides[n];
+  if(a){const h=DECK.hooks[a.id];h&&h.leave&&h.leave();a.classList.remove('active');a.classList.add('leaving');setTimeout(()=>a.classList.remove('leaving'),1000)}
+  b.classList.remove('active');void b.offsetWidth;b.classList.add('active');cur=n;
+  const h=DECK.hooks[b.id];h&&h.enter&&h.enter();
+  if(a)SFX.whoosh();
+  $('#cnt').textContent=String(n+1).padStart(2,'0')+' / '+String(slides.length).padStart(2,'0');
+  $('#prog').style.width=((n+1)/slides.length*100)+'%';$('#live').textContent=`الشريحة ${n+1}: ${b.dataset.title||''}`;
+  try{history.replaceState(null,'','#'+(n+1))}catch(e){}
+}
+DECK.go=go;
+/* a slide hook may consume "next" for an internal step (e.g. video → message) */
+const next=()=>{const h=DECK.hooks[slides[cur].id];if(h&&h.next&&h.next())return;go(cur+1)},prev=()=>go(cur-1);
+$('#bNext').onclick=next;$('#bPrev').onclick=prev;
+function full(){document.fullscreenElement?document.exitFullscreen():document.documentElement.requestFullscreen?.().catch(()=>{})}
+$('#bFull').onclick=full;
+
+const open=id=>$('#'+id).classList.add('open'),closeOv=()=>$$('.overlay.open').forEach(o=>o.classList.remove('open'));
+$$('.overlay').forEach(o=>o.addEventListener('click',e=>{if(e.target===o)closeOv()}));
+function overview(){$('#ovGrid').innerHTML=slides.map((s,i)=>`<button class="${i===cur?'cur':''}" data-i="${i}" style="background-image:url('${s.dataset.thumb||''}')"><div>${String(i+1).padStart(2,'0')} · ${s.dataset.title||''}</div></button>`).join('');
+  $$('#ovGrid button').forEach(b=>b.onclick=()=>{closeOv();go(+b.dataset.i)});open('overview')}
+$('#bOv').onclick=overview;$('#bHelp').onclick=()=>open('help');
+
+addEventListener('keydown',e=>{if(e.altKey||e.ctrlKey||e.metaKey)return;const k=e.key;ac();
+  if($('.overlay.open')){if(['Escape','o','O','?'].includes(k))closeOv();e.preventDefault();return}
+  const h=DECK.hooks[slides[cur].id];if(h&&h.key&&h.key(k)){e.preventDefault();return}
+  if(['ArrowRight','ArrowDown','PageDown',' ','Enter','n','N'].includes(k)){if(k==='Enter'&&e.target.closest('button'))return;e.preventDefault();next()}
+  else if(['ArrowLeft','ArrowUp','PageUp','Backspace','p','P'].includes(k)){e.preventDefault();prev()}
+  else if(k==='Home')go(0);else if(k==='End')go(slides.length-1);
+  else if(k==='f'||k==='F')full();else if(k==='o'||k==='O')overview();else if(k==='?')open('help');
+  else if(k==='m'||k==='M')$('#bSnd').click();else if(k==='l'||k==='L')document.body.classList.toggle('laser');
+});
+addEventListener('pointerdown',ac);
+
+/* swipe (RTL: swipe right → next) */
+let tx=null,ty=null;
+stage.addEventListener('touchstart',e=>{if(e.target.closest('button,.note,.puz,.phone,.chest,video'))return tx=null;tx=e.touches[0].clientX;ty=e.touches[0].clientY},{passive:true});
+stage.addEventListener('touchend',e=>{if(tx===null)return;const dx=e.changedTouches[0].clientX-tx,dy=e.changedTouches[0].clientY-ty;
+  if(Math.abs(dx)>60&&Math.abs(dx)>Math.abs(dy))(dx>0?next:prev)();tx=null});
+
+let it;const wake=e=>{document.body.classList.remove('idle');clearTimeout(it);it=setTimeout(()=>document.body.classList.add('idle'),2600);
+  if(e&&e.clientX!==undefined){const l=$('#laser');l.style.left=e.clientX+'px';l.style.top=e.clientY+'px'}};
+addEventListener('mousemove',wake);addEventListener('touchstart',wake,{passive:true});wake();
+
+/* ---------- 1. cover: phone reel ---------- */
+(()=>{const ph=$('#s1 .phone'),v=$('video',ph),bv=$('#bigview'),small=$('.slot',ph),big=$('.slot',bv);
+  const toggle=()=>{v.paused?v.play().catch(()=>{}):v.pause()};
+  v.addEventListener('play',()=>ph.classList.add('playing'));
+  v.addEventListener('pause',()=>ph.classList.remove('playing'));
+  const openBig=()=>{big.appendChild(v);v.controls=true;bv.classList.add('open');v.play().catch(()=>{})};
+  const closeBig=()=>{if(!bv.classList.contains('open'))return;v.controls=false;small.appendChild(v);bv.classList.remove('open')};
+  ph.onclick=toggle;$('#reelPlay').onclick=toggle;$('#reelBig').onclick=openBig;
+  $('.bv-x',bv).onclick=closeBig;bv.onclick=e=>{if(e.target===bv)closeBig()};
+  DECK.hooks.s1={enter(){setTimeout(()=>SFX.thud(),1100);setTimeout(()=>SFX.chime(),2200)},leave(){closeBig();v.pause()},
+    key(k){if(bv.classList.contains('open')){if(k==='Escape')closeBig();else if(k===' ')toggle();return true}return false}};
+})();
+
+/* ---------- video slides ---------- */
+/* each video stops just before its black tail (data-end) and moves straight on:
+   to the next slide, or to the slide's own onEnd step (slide 4 shows Romeo's letter) */
+$$('.vslide').forEach(sec=>{const v=$('video',sec),end=+v.dataset.end||0;let raf,done=false;
+  const finish=()=>{if(done||slides[cur]!==sec)return;done=true;cancelAnimationFrame(raf);v.pause();sec.classList.remove('paused');
+    const h=DECK.hooks[sec.id];h&&h.onEnd?h.onEnd():go(cur+1)};
+  const watch=()=>{if(end&&v.currentTime>=end)return finish();if(!v.paused)raf=requestAnimationFrame(watch)};
+  const play=()=>{done=false;v.play().then(()=>{sec.classList.remove('paused');cancelAnimationFrame(raf);watch()}).catch(()=>sec.classList.add('paused'))};
+  v.addEventListener('pause',()=>{if(!v.ended&&!done)sec.classList.add('paused')});
+  v.addEventListener('play',()=>sec.classList.remove('paused'));
+  v.addEventListener('ended',finish);
+  v.onclick=()=>v.paused?play():v.pause();
+  $('.bigplay',sec).onclick=play;
+  $('.vre',sec).onclick=()=>{v.currentTime=0;play()};
+  DECK.hooks[sec.id]={enter(){done=false;v.currentTime=0;setTimeout(play,450)},leave(){done=true;cancelAnimationFrame(raf);v.pause()}};
+});
+
+/* ---------- 6. the three-key puzzle (from "لغز المفاتيح") ---------- */
+const PUZ=[
+  {kick:'اللغز الأول',title:'المفتاح الأول: اكتشفوا السر!',word:['سَ','أَ','لَ'],pv:0,hz:1,key:'key-1.png',hole:'keyhole-2.png',ord:'الأول',
+   qs:[['ما حركة الهمزة؟','الفتحة ( ـَ )'],
+       ['ما حركة الحرف الذي يسبقها؟','الفتحة؛ لأن حرف السين مفتوح ( سَـ )'],
+       ['على أي حرف كُتبت الهمزة؟','على الألف ( أ )']],
+   rule:'همزة مفتوحة بعد فتح'},
+  {kick:'اللغز الثاني',title:'المفتاح الثاني: هل اكتشفتم السر؟',word:['مَ','سْ','أَ','لَة'],pv:1,hz:2,key:'key-2.png',hole:'keyhole-1.png',ord:'الثاني',
+   qs:[['ما حركة الهمزة؟','الفتحة ( ـَ )'],
+       ['ما حركة الحرف الذي يسبقها؟','السكون؛ لأن حرف السين ساكن ( سْـ )'],
+       ['لماذا كُتبت الهمزة على الألف؟','لأن الفتحة أقوى من السكون، والألف تناسب الفتحة']],
+   rule:'همزة مفتوحة بعد سكون'},
+  {kick:'اللغز الثالث',title:'المفتاح الثالث: بقي السر الأخير!',word:['فَ','أْ','س'],pv:0,hz:1,key:'key-3.png',hole:'keyhole-3.png',ord:'الثالث',
+   qs:[['ما حركة الهمزة؟','السكون ( ـْ )'],
+       ['ما حركة الحرف الذي يسبقها؟','الفتحة؛ لأن حرف الفاء مفتوح ( فَـ )'],
+       ['ما سبب كتابة الهمزة على الألف؟','لأن الفتحة قبلها أقوى من السكون، والألف تناسب الفتحة']],
+   rule:'همزة ساكنة بعد فتح'}
+];
+const solved=[false,false,false];
+const wordHTML=p=>p.word.map((c,i)=>`<span class="${i===p.hz?'hz':i===p.pv?'pv':''}">${c}</span>`).join('');
+(()=>{const notes=$('#notes'),tray=$('#tray'),puz=$('#puz'),win=$('#win');
+  notes.innerHTML=PUZ.map((p,i)=>`<button class="note" data-i="${i}" style="--d:${(1+i*.35).toFixed(2)}s" aria-label="${p.kick}">
+    <span class="ribbon">المفتاح ${p.ord}</span><span class="w">${p.word.join('')}</span>
+    <span class="med"><img class="k" src="assets/${p.key}" alt="" style="animation-delay:${-i*.8}s"></span>
+    <span class="tap">${solved[i]?'✔ تم فتح القفل':'🔓 اضغط لفتح اللغز'}</span><span class="stamp">✔</span></button>`).join('');
+  tray.innerHTML=PUZ.map((p,i)=>`<div class="slot"><img src="assets/${p.key}" alt=""></div>`).join('')+'<b id="kc">0 / 3</b>';
+  const refresh=()=>{$$('.note',notes).forEach((n,i)=>{n.classList.toggle('done',solved[i]);$('.tap',n).textContent=solved[i]?'✔ تم فتح القفل':'🔓 اضغط لفتح اللغز'});$$('.slot',tray).forEach((s,i)=>s.classList.toggle('on',solved[i]));
+    $('#kc').textContent=solved.filter(Boolean).length+' / 3'};
+  let P=null,step=0,busy=false;
+  function openP(i){const p=PUZ[i];P=i;step=0;busy=false;SFX.pop();
+    puz.innerHTML=`<div class="card"><div class="main">
+      <span class="kicker">${p.kick}</span><h3>${p.title}</h3><div class="look">تأمّلوا الكلمة الآتية:</div>
+      <div class="big">${wordHTML(p)}</div>
+      <ol class="qs">${p.qs.map((q,j)=>`<li data-j="${j}"><div class="qq"><span class="n">${'١٢٣'[j]}</span>${q[0]}</div><div class="ans"><span>✔ ${q[1]}</span></div></li>`).join('')}</ol>
+      <div class="foot">💡 فكّروا جيدًا، ثم أجيبوا!</div></div>
+      <div class="side"><div class="rays2"></div><img class="hole2" src="assets/${p.hole}" alt=""><div class="got">🎉 حصلتم على المفتاح ${p.ord}!</div>
+        <img class="key2" src="assets/${p.key}" alt=""><img class="romeo-mini" src="assets/romeo.png" alt=""><div class="cap">أجيبوا عن الأسئلة ليفتح روميو الصندوق!</div></div>
+      <button class="x" aria-label="إغلاق">✕</button><button class="nextq">اكشف الإجابة ←</button></div>`;
+    puz.classList.add('open');
+    $('.x',puz).onclick=closeP;
+    $('.nextq',puz).onclick=reveal;
+    $$('.qs li',puz).forEach(li=>li.onclick=()=>{if(+li.dataset.j===step)reveal()});
+    if(solved[i]){step=3;$$('.qs li',puz).forEach(l=>l.classList.add('open'));$$('.big span',puz).forEach(s=>s.classList.add('lit'));$('.side',puz).classList.add('unlocked');$('.key2',puz).style.opacity=0;$('.nextq',puz).textContent='رجوع إلى المفاتيح'}
+  }
+  function closeP(){puz.classList.remove('open');P=null;refresh();checkWin()}
+  async function reveal(){if(P===null||busy)return;const p=PUZ[P];
+    if(step>=3){closeP();return}
+    const li=$$('.qs li',puz)[step];li.classList.add('open');SFX.chime();
+    if(step===0)$('.big .hz',puz).classList.add('lit');
+    if(step===1)$('.big .pv',puz).classList.add('lit');
+    step++;
+    const key=$('.key2',puz);key.style.transform=`translateY(${-step*45}px) rotate(${step%2?-12:12}deg)`;
+    if(step===3){busy=true;$('.nextq',puz).style.visibility='hidden';await wait(1100);
+      key.style.transition='transform 1.1s cubic-bezier(.5,-.3,.3,1.3),opacity .4s 1s';
+      key.style.transform='translateY(-330px) scale(.55) rotate(360deg)';key.style.opacity=0;SFX.whoosh();
+      await wait(1100);const side=$('.side',puz);side.classList.add('unlocked');SFX.unlock();
+      burst(215,185,26,side,240);solved[P]=true;refresh();
+      await wait(600);const nb=$('.nextq',puz);nb.textContent='رجوع إلى المفاتيح';nb.style.visibility='visible';busy=false}
+  }
+  function checkWin(){if(solved.every(Boolean)&&!win.dataset.shown){win.dataset.shown=1;win.classList.add('show');SFX.fanfare();burst(960,540,40,$('#s6'),500);setTimeout(()=>win.classList.remove('show'),4200)}}
+  $$('.note',notes).forEach(n=>n.onclick=()=>openP(+n.dataset.i));
+  $('#resetKeys').onclick=()=>{solved.fill(false);delete win.dataset.shown;refresh()};
+  refresh();
+  DECK.hooks.s6={enter(){win.classList.remove('show');[0,1,2].forEach(i=>setTimeout(SFX.pop,1000+i*350+500))},leave(){puz.classList.remove('open');P=null},
+    key(k){if(P!==null){if(k==='Escape')closeP();else if([' ','Enter','ArrowRight','ArrowDown','PageDown'].includes(k))reveal();return true}
+      if(['1','2','3','١','٢','٣'].includes(k)){openP('123١٢٣'.indexOf(k)%3);return true}return false}};
+})();
+
+/* ---------- 9. finale: the chest shakes and the 3 keys fly out ---------- */
+(()=>{const sec=$('#s9'),chest=$('#chest'),fk=$('#fkeys'),cv=$('#fx'),cx=cv.getContext('2d');
+  const CX=1270,CY=760;               /* chest mouth in stage coords */
+  const SLOTS=[[850,585],[540,585],[230,585]]; /* card centres, RTL: first key on the right */
+  let run=0,parts=[],raf;
+  function confetti(){const cols=['#ffd21f','#f2b84b','#e53935','#2e9d4f','#1d5ad6','#ffffff'];
+    for(let i=0;i<180;i++)parts.push({x:960+(Math.random()-.5)*400,y:300,vx:(Math.random()-.5)*26,vy:-Math.random()*22-6,r:Math.random()*Math.PI,vr:(Math.random()-.5)*.3,
+      w:10+Math.random()*10,h:6+Math.random()*8,c:cols[i%cols.length],life:240+Math.random()*80});
+    cancelAnimationFrame(raf);const f=()=>{cx.clearRect(0,0,1920,1080);parts=parts.filter(p=>p.life-->0&&p.y<1150);
+      parts.forEach(p=>{p.vy+=.45;p.vx*=.99;p.x+=p.vx;p.y+=p.vy;p.r+=p.vr;cx.save();cx.translate(p.x,p.y);cx.rotate(p.r);cx.fillStyle=p.c;cx.fillRect(-p.w/2,-p.h/2,p.w,p.h*Math.abs(Math.cos(p.r*2)));cx.restore()});
+      if(parts.length)raf=requestAnimationFrame(f)};raf=requestAnimationFrame(f)}
+  function puff(){for(let i=0;i<7;i++){const d=document.createElement('div');d.className='puff';d.style.left=(CX-60+(i-3)*50)+'px';d.style.top=(1000)+'px';sec.appendChild(d);
+    d.animate([{transform:'scale(.3)',opacity:.9},{transform:`translate(${(i-3)*40}px,-60px) scale(1.8)`,opacity:0}],{duration:1100,easing:'ease-out'}).onfinish=()=>d.remove()}}
+  async function play(){const my=++run,ok=()=>my===run&&cur===slides.indexOf(sec);
+    chest.className='chest';fk.innerHTML='';$$('.kcard',sec).forEach(c=>c.remove());['finTitle','finSub','secret'].forEach(id=>$('#'+id).classList.remove('show'));
+    cx.clearRect(0,0,1920,1080);parts=[];
+    await wait(700);if(!ok())return;
+    void chest.offsetWidth;chest.classList.add('in');await wait(1000);if(!ok())return;
+    chest.classList.remove('in');chest.style.opacity=1;chest.classList.add('land');SFX.thud();puff();await wait(700);if(!ok())return;
+    chest.classList.remove('land');chest.classList.add('shake');SFX.rattle();await wait(1950);if(!ok())return;
+    chest.classList.remove('shake');chest.classList.add('open');SFX.unlock();burst(CX,CY-80,34,sec,420);await wait(500);
+    for(let i=0;i<3;i++){if(!ok())return;const p=PUZ[i],[x,y]=SLOTS[i];
+      const k=document.createElement('img');k.className='fkey';k.src='assets/'+p.key;k.style.left=(x-95)+'px';k.style.top=(y-295)+'px';fk.appendChild(k);
+      const dx=CX-x,dy=CY-(y-150);
+      k.animate([{opacity:0,transform:`translate(${dx}px,${dy}px) scale(.2) rotate(0)`},
+                 {opacity:1,transform:`translate(${dx*.55}px,${dy*.2-380}px) scale(1.25) rotate(-400deg)`,offset:.55},
+                 {opacity:1,transform:'none'}],{duration:1300,easing:'cubic-bezier(.3,.7,.4,1)',fill:'forwards'});
+      SFX.whoosh();setTimeout(()=>{if(!ok())return;SFX.chime();burst(x,y-150,14,sec,160);k.animate([{transform:'translateY(0)'},{transform:'translateY(-12px)'},{transform:'translateY(0)'}],{duration:3000,iterations:Infinity,easing:'ease-in-out'});
+        const c=document.createElement('div');c.className='kcard';c.style.left=(x-145)+'px';c.style.top=(y+5)+'px';
+        c.innerHTML=`<div class="w">${p.word.join('')}</div><div class="r">${p.rule}</div>`;sec.appendChild(c);void c.offsetWidth;c.classList.add('show')},1250);
+      await wait(800)}
+    await wait(1100);if(!ok())return;
+    $('#finTitle').classList.add('show');$('#finSub').classList.add('show');SFX.fanfare();confetti();
+    await wait(900);if(!ok())return;$('#secret').classList.add('show')}
+  chest.onclick=play;$('#replay').onclick=play;
+  DECK.hooks.s9={enter:play,leave(){run++;cancelAnimationFrame(raf)}};
+})();
+
+/* ---------- 4. gate video → Romeo's message ---------- */
+(()=>{const sec=$('#s4'),v=$('video',sec),base=DECK.hooks.s4;let t;
+  const show=()=>{if(sec.classList.contains('msg'))return;clearTimeout(t);v.pause();sec.classList.remove('ended');sec.classList.add('msg');
+    SFX.whoosh();setTimeout(SFX.pop,600);[1400,2500,3600].forEach(d=>setTimeout(SFX.chime,d))};
+  const hide=()=>{clearTimeout(t);sec.classList.remove('msg')};
+  $('.vre',sec).addEventListener('click',hide,true);
+  DECK.hooks.s4={enter(){hide();base.enter()},leave(){hide();base.leave()},onEnd:show,next(){if(!sec.classList.contains('msg')){show();return true}return false}};
+})();
+DECK.hooks.s8={enter(){setTimeout(SFX.pop,600);[1300,2000,2700,3400].forEach(t=>setTimeout(SFX.chime,t))}};
+
+go(Math.max(0,(parseInt(location.hash.slice(1))||1)-1));
+})();
+</script>
+</body>
+</html>
